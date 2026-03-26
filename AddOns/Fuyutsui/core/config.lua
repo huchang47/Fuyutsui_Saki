@@ -1,7 +1,7 @@
 local _, fu = ...
 local className, classFilename, classId = UnitClass("player")
 local specIndex = C_SpecializationInfo.GetSpecialization()
-
+print(className, classFilename, classId, specIndex)
 fu.className, fu.classFilename, fu.classId = className, classFilename, classId
 fu.specIndex = specIndex
 
@@ -16,7 +16,7 @@ function SetTestSecret(set)
     SetCVar("doNotFlashLowHealthWarning", set);
 end
 
-SetTestSecret(0)
+SetTestSecret(1)
 
 -- /script SetTestSecret(0)
 -- 遍历队伍成员, 来自WeakAuras的代码

@@ -45,7 +45,6 @@ def run_paladin_logic(state_dict, spec_name):
             current_step = "施放 保护祝福"
             action_hotkey = get_hotkey(0, "保护祝福")
         elif group_type == 46 and spells.get("清洁术", 0) == 0 and dispel_unit_magic is not None:
-            # config 以“清洁术”标识冷却；keymap 实际绑定“清毒术”热键
             current_step = f"施放 清毒术 on {dispel_unit_magic}"
             action_hotkey = get_hotkey(int(dispel_unit_magic), "清毒术")
         elif group_type == 46 and spells.get("清洁术", 0) == 0 and dispel_unit_disease is not None:

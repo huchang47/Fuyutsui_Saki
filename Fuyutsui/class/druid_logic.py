@@ -23,7 +23,7 @@ def run_druid_logic(state_dict, spec_name):
     combat = state_dict.get("战斗")
     casting = state_dict.get("施法")
     channeling = state_dict.get("引导")
-
+    natural_heal_cd = spells.get("自然之愈", -1)
     action_hotkey = None
     current_step = "无匹配技能"
     unit_info = {}

@@ -230,8 +230,6 @@ function fu.updateSpecInfo()
     end
 end
 
-
-
 function fu.updateHeroTalent()
     if fu.blocks.hero_talent then
         local hero_talent = 0

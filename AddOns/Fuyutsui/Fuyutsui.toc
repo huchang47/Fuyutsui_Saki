@@ -20,6 +20,7 @@
 
 ## X-Category: Combat
 
+libs/LibStub/LibStub.lua
 libs/LibRangeCheck-3.0/LibRangeCheck-3.0.lua
 core/config.lua
 core/block.lua
@@ -28,5 +29,6 @@ class/Druid.lua
 class/Priest.lua
 class/DeathKnight.lua
 class/Paladin.lua
+class/Warlock.lua
 keybinds.lua
 main.lua

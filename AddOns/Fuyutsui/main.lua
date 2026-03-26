@@ -42,28 +42,27 @@ local function getPlayerInfo()
     state.className, state.classFilename, state.classId = fu.className, fu.classFilename, fu.classId
     state.specIndex, state.specID = specIndex, specID
     -- 载入函数
-    readKeybindings = fu.readKeybindings()                                   -- 读取按键绑定
-    updateHeroTalent = fu.updateHeroTalent                                   -- 更新英雄天赋
-    updateSpecInfo = fu.updateSpecInfo                                       -- 更新专精信息
-    CreateClassMacro = fu.CreateClassMacro                                   -- 创建类宏
+    readKeybindings = fu.readKeybindings()                              -- 读取按键绑定
+    updateHeroTalent = fu.updateHeroTalent                              -- 更新英雄天赋
+    updateSpecInfo = fu.updateSpecInfo                                  -- 更新专精信息
+    CreateClassMacro = fu.CreateClassMacro                              -- 创建类宏
     -- 更新函数
-    if type(readKeybindings) == "function" then readKeybindings() end        -- 读取按键绑定
-    if type(updateHeroTalent) == "function" then updateHeroTalent() end      -- 更新英雄天赋
-    if type(updateSpecInfo) == "function" then updateSpecInfo() end -- 更新专精信息
-    if type(CreateClassMacro) == "function" then CreateClassMacro() end      -- 创建类宏
-    -- 载入函数
-    updateSpellSuccess = fu.updateSpellSuccess                               -- 更新法术成功
-    updateSpellOverlay = fu.updateSpellOverlay                               -- 更新法术覆盖
-    updateOnUpdate = fu.updateOnUpdate                                       -- 更新OnUpdate
-    spellActivationOverlayShow = fu.spellActivationOverlayShow               -- 显示法术激活覆盖
-    spellActivationOverlayHide = fu.spellActivationOverlayHide               -- 隐藏法术激活覆盖
-    updateSpellOverride = fu.updateSpellOverride                             -- 更新法术覆盖
-    updateSpellIcon = fu.updateSpellIcon                                     -- 更新法术图标
-    updateSpellCooldownByEvent = fu.updateSpellCooldownByEvent               -- 更新法术冷却
+    if type(readKeybindings) == "function" then readKeybindings() end   -- 读取按键绑定
+    if type(updateSpecInfo) == "function" then updateSpecInfo() end     -- 更新专精信息
+    if type(CreateClassMacro) == "function" then CreateClassMacro() end -- 创建类宏
+    -- 再次载入函数
+    updateSpellSuccess = fu.updateSpellSuccess                          -- 更新法术成功
+    updateSpellOverlay = fu.updateSpellOverlay                          -- 更新法术覆盖
+    updateOnUpdate = fu.updateOnUpdate                                  -- 更新OnUpdate
+    spellActivationOverlayShow = fu.spellActivationOverlayShow          -- 显示法术激活覆盖
+    spellActivationOverlayHide = fu.spellActivationOverlayHide          -- 隐藏法术激活覆盖
+    updateSpellOverride = fu.updateSpellOverride                        -- 更新法术覆盖
+    updateSpellIcon = fu.updateSpellIcon                                -- 更新法术图标
+    updateSpellCooldownByEvent = fu.updateSpellCooldownByEvent          -- 更新法术冷却
     -- 更新变量
-    state.powerType = fu.powerType or nil                                    -- 更新能量类型
-    group_blocks = fu.group_blocks                                           -- 更新队伍块
-    blocks, assistant = fu.blocks, fu.assistant_spells                       -- 更新色块, 一键助手
+    state.powerType = fu.powerType or nil                               -- 更新能量类型
+    group_blocks = fu.group_blocks                                      -- 更新队伍块
+    blocks, assistant = fu.blocks, fu.assistant_spells                  -- 更新色块, 一键助手
 
     -- 创建固定色块
     creat(fixed_blocks.anchor, 0)
@@ -75,8 +74,9 @@ local function updatePlayerSpecInfo()
     fu.clearAllTextures()
     local specIndex = C_SpecializationInfo.GetSpecialization()
     local specID = C_SpecializationInfo.GetSpecializationInfo(specIndex)
-    state.specIndex, state.specID = specIndex, specID
+    if type(updateSpecInfo) == "function" then updateSpecInfo() end -- 更新专精信息
     -- 更新变量
+    state.specIndex, state.specID = specIndex, specID
     state.powerType = fu.powerType or nil              -- 更新能量类型
     group_blocks = fu.group_blocks                     -- 更新队伍块
     blocks, assistant = fu.blocks, fu.assistant_spells -- 更新色块, 一键助手
@@ -146,6 +146,17 @@ local function updatePlayerChannelingInfo()
     end
 end
 
+local function updatePlayerCasting()
+    local name, _, _, startTimeMs, endTimeMs, _, _, _, castingSpellID = UnitCastingInfo("player")
+    if blocks and blocks.castingSpell then
+        if castingSpellID and blocks.spell_cd and blocks.spell_cd[castingSpellID] then
+            creat(blocks.castingSpell, blocks.spell_cd[castingSpellID].index / 255)
+        else
+            creat(blocks.castingSpell, 0)
+        end
+    end
+end
+
 -- 更新玩家血量信息
 local function updatePlayerHealth()
     state.healthPercent = UnitHealthPercent("player", false, curve100)
@@ -167,6 +178,10 @@ local function updatePlayerPower(powerType)
     if powerType == "HOLY_POWER" and blocks and blocks.holyPower then
         local power = UnitPower("player", 9)
         creat(blocks.holyPower, power / 255)
+    end
+    if powerType == "SOUL_SHARDS" and blocks and blocks.soulShards then
+        local power = UnitPower("player", 7)
+        creat(blocks.soulShards, power / 255)
     end
 end
 
@@ -593,6 +608,7 @@ end
 frame:RegisterEvent("PLAYER_ENTERING_WORLD")
 function frame:PLAYER_ENTERING_WORLD()
     updatePlayerState()
+    if type(updateHeroTalent) == "function" then updateHeroTalent() end -- 更新英雄天赋
 end
 
 frame:RegisterEvent("ZONE_CHANGED")
@@ -614,7 +630,6 @@ function frame:PLAYER_TALENT_UPDATE()
     updateTargetFullInfo()
     updateShapeshiftForm()
     if type(readKeybindings) == "function" then readKeybindings() end
-    if type(updateSpecInfo) == "function" then updateSpecInfo() end
     if type(updateHeroTalent) == "function" then updateHeroTalent() end
 end
 
@@ -688,11 +703,13 @@ end
 frame:RegisterUnitEvent("UNIT_SPELLCAST_START", "player")
 function frame:UNIT_SPELLCAST_START(unit, spellId)
     state.casting = true
+    updatePlayerCasting()
 end
 
 frame:RegisterUnitEvent("UNIT_SPELLCAST_STOP", "player")
 function frame:UNIT_SPELLCAST_STOP(unit, spellId)
     state.casting = false
+    updatePlayerCasting()
 end
 
 -- 引导状态

@@ -140,38 +140,38 @@ end
 
 function fu.updateSpecInfo()
     local specIndex = C_SpecializationInfo.GetSpecialization()
-    print("载入圣骑士")
     fu.powerType = nil
     fu.blocks = nil
     fu.group_blocks = nil
     fu.assistant_spells = nil
     if specIndex == 1 then
-        print("载入圣骑士 神圣")
         fu.powerType = "MANA"
         fu.blocks = {
             holyPower = 11,
             target_valid = 12,
             group_type = 13,
             members_count = 14,
-            failedSpell = 15,
+            encounterID = 15,
+            difficultyID = 16,
+            failedSpell = 17,
             auras = {
                 [223819] = {
                     name = "神圣意志",
-                    index = 16,
+                    index = 18,
                     remaining = 0,
                     duration = 12,
                     expirationTime = nil,
                 },
                 [54149] = {
                     name = "圣光灌注",
-                    index = 17,
+                    index = 19,
                     remaining = 0,
                     duration = 15,
                     expirationTime = nil,
                 },
                 [414273] = {
                     name = "神性之手",
-                    index = 18,
+                    index = 20,
                     remaining = 0,
                     duration = 19.5,
                     applications = 0,
@@ -211,7 +211,6 @@ function fu.updateSpecInfo()
         fu.assistant_spells = {
         }
     elseif specIndex == 2 then
-        print("载入圣骑士 防护")
         fu.HarmfulSpellId = 275779
         fu.powerType = "MANA"
         fu.blocks = {
@@ -279,7 +278,6 @@ function fu.updateSpecInfo()
         }
         fu.updateSpellIcon(432459)
     elseif specIndex == 3 then
-        print("载入圣骑士 惩戒")
         fu.HarmfulSpellId = 20271
         fu.powerType = "MANA"
         fu.blocks = {
