@@ -80,7 +80,7 @@ function fu.updateSpecInfo()
             auras = {
                 ["神圣军备"] = {
                     index = 40,
-                    auraRef = fu.auras.byIcon[432459],
+                    auraRef = fu.updateAuras.byIcon[432459],
                     showKey = "isIcon",
                 },
                 ["神圣意志"] = {
